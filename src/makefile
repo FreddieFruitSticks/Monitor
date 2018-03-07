@@ -1,18 +1,22 @@
 # quick reference http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
 
 CC = g++
-CFLAGS = -I$(INCLUDE_DIR)
+CFLAGS = -I$(INCLUDE_DIR) -I$(PISTACHE_INCLUDE_DIR) -L$(PISTACHE_LIB_DIR) -lpistache -std=gnu++11
 OUTPUT_TARGET = app
 
 INCLUDE_DIR = ../include
+PISTACHE_INCLUDE_DIR = /usr/local/include/pistache
+PISTACHE_LIB_DIR = /usr/local/lib
+
+
 OBJS_DIR = objects
 LIB_DIR = ../lib
-LIBS = -lm
+LIBS = -pthread
 
-_DEPS = helloWorld.h
+_DEPS = HelloHandler.h
 DEPS = $(patsubst %, $(INCLUDE_DIR)/%, $(_DEPS))
 
-_OBJS = helloWorld.o main.o
+_OBJS = HelloHandler.o main.o
 OBJS = $(patsubst %, $(OBJS_DIR)/%, $(_OBJS))
 
 $(OUTPUT_TARGET): $(OBJS)
