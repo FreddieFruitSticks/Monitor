@@ -9,7 +9,7 @@ int main(){
     Http::Endpoint server(addr);
     server.init(opts);
     server.setHandler(Http::make_handler<HelloHandler>());
-    server.serveThreaded();
+    server.serve();
 
     server.shutdown();
     std::cout << "ending server" << std::endl;
