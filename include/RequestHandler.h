@@ -1,9 +1,11 @@
 #include "pistache/endpoint.h"
 using namespace Pistache;
 
-class HelloHandler : public Http::Handler {
+class RequestHandler : public Http::Handler {
 public:
 	HTTP_PROTOTYPE(HelloHandler)
-
+public:
 	void onRequest(const Http::Request& request, Http::ResponseWriter response);
+private:
+	std::string prettifyJson(std::string json);
 };
