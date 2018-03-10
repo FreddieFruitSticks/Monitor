@@ -21,5 +21,5 @@ void RequestHandler::onRequest(const Http::Request& request, Http::ResponseWrite
 }
 
 std::string RequestHandler::prettifyJson(std::string json){
-	
+	return "";
 }

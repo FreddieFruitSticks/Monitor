@@ -3,7 +3,7 @@ using namespace Pistache;
 
 class RequestHandler : public Http::Handler {
 public:
-	HTTP_PROTOTYPE(HelloHandler)
+	HTTP_PROTOTYPE(RequestHandler)
 public:
 	void onRequest(const Http::Request& request, Http::ResponseWriter response);
 private:
