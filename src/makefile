@@ -1,36 +1,31 @@
-# quick reference http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
-
 CC = g++
-CFLAGS = -I$(INCLUDE_DIR) -I$(PISTACHE_INCLUDE_DIR) -L$(PISTACHE_LIB_DIR) -lpistache -std=gnu++11
+CFLAGS = -I$(INCLUDE_DIR) $(THIRD_PARTY_INCLUDE) -L$(THIRD_PARTY_LIB) -lpistache -std=gnu++11
 OUTPUT_TARGET = app
 
 INCLUDE_DIR = ../include
-PISTACHE_INCLUDE_DIR = /usr/local/include/pistache
-PISTACHE_LIB_DIR = /usr/local/lib
 
+THIRD_PARTY_INCLUDE_DIR = ../cget/include
+_THIRD_PARTY_INCLUDE = nlohmann pistache
+THIRD_PARTY_INCLUDE = $(patsubst %, -I$(THIRD_PARTY_INCLUDE_DIR)/%, $(_THIRD_PARTY_INCLUDE))
+THIRD_PARTY_LIB = ../cget/lib
 
 OBJS_DIR = objects
-LIB_DIR = ../lib
 LIBS = -pthread
 
-_DEPS = HelloHandler.h
+_THIRD_PARTY_DEPS = nlohmann/json.hpp
+THIRD_PARTY_DEPS = $(patsubst %, $(THIRD_PARTY_INCLUDE)/%, $(THIRD_PARTY_DEPS))
+
+_DEPS = RequestHandler.h
 DEPS = $(patsubst %, $(INCLUDE_DIR)/%, $(_DEPS))
 
-_OBJS = HelloHandler.o main.o
+_OBJS = RequestHandler.o main.o
 OBJS = $(patsubst %, $(OBJS_DIR)/%, $(_OBJS))
 
 $(OUTPUT_TARGET): $(OBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
-$(OBJS_DIR)/%.o: %.cpp $(DEPS)
+$(OBJS_DIR)/%.o: %.cpp $(DEPS) $(THIRD_PARTY)
 	$(CC) -c -o $@ $< $(CFLAGS)
-
-# the above is the same as the following but more concise:	 
-# helloWorld.o:
-# 	$(CC) -c helloWorld.cpp -I.
-
-# main.o:
-	# $(CC) -c main.cpp -I.
 	
 .PHONY: clean
 
@@ -38,7 +33,7 @@ clean:
 	rm -f $(OBJS_DIR)/*.o $(OUTPUT_TARGET) *~ core $(INCLUDE_DIR)/*~
 
 
-# notes: 
+# notes:
 # 1) -c makes .o object files which are unlinked compiled files. g++ compiles and then links, but only links with already compiled files
 # 2) -o names the output target file
 # 3) $ dereferences the variable after it
