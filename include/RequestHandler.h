@@ -7,5 +7,5 @@ public:
 public:
 	void onRequest(const Http::Request& request, Http::ResponseWriter response);
 private:
-	std::string prettifyJson(std::string json);
+	std::string vectorToString(std::vector<std::string> entries);
 };

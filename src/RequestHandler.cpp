@@ -1,25 +1,59 @@
 #include "RequestHandler.h"
 #include <json.hpp>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
 
 void RequestHandler::onRequest(const Http::Request& request, Http::ResponseWriter response){
 
-	if (request.resource() == "/test"){
+	if (request.resource() == "/ping"){
 		if(request.method() == Http::Method::Get){
-			response.send(Http::Code::Ok, "test worked");
+			response.send(Http::Code::Ok, "Pong");
 			return;
 		}
 	}
 	if(request.resource() == "/add"){
 		if(request.method() == Http::Method::Post){
-			std::string body = request.body();
-			nlohmann::json reading = nlohmann::json::parse("{ \"happy\": true, \"pi\": 3.141 }");
+			std::ofstream deviceLogFile;
+			deviceLogFile.open("device_log_file", std::ios::app);
+
+			// nlohmann::json body = nlohmann::json::parse("{ \"happy\": true, \"pi\": 3.141 }");
+			// std::cout << body["happy"]<< std::endl;
+
+			deviceLogFile << request.body() << std::endl;
+			deviceLogFile.close();
 
 			response.send(Http::Code::Ok, request.body(), MIME(Text, Plain));
+		}
+	}
+	if(request.resource() == "/read"){
+		if(request.method() == Http::Method::Get){
+			std::vector<std::string> data;
+			std::ifstream inDeviceLogs("device_log_file");
+			std::string singleLogEntry;
+			while(std::getline(inDeviceLogs, singleLogEntry)){
+				data.push_back(singleLogEntry);
+			}
+			std::string responseBody = RequestHandler::vectorToString(data);
+			response.send(Http::Code::Ok, responseBody);
 		}
 	}
 	response.send(Http::Code::Ok, "Received Request but could do nothing with it");
 }
 
-std::string RequestHandler::prettifyJson(std::string json){
-	return "";
+std::string RequestHandler::vectorToString(std::vector<std::string> entries) {
+	std::vector<std::string>::iterator dataIterator;
+	std::string response = "[";
+
+	for(dataIterator = entries.begin(); dataIterator != entries.end(); dataIterator++){
+		if(std::next(dataIterator) == entries.end()){
+			response = response.append(*dataIterator);
+		}else{
+			response = response.append(*dataIterator).append(",");
+		}
+	}
+	response.append("]");
+	return response;
 }
