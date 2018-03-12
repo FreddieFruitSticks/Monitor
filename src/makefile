@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -I$(INCLUDE_DIR) $(THIRD_PARTY_INCLUDE) -L$(THIRD_PARTY_LIB) -lpistache -std=gnu++11
-OUTPUT_TARGET = app
+OUTPUT_TARGET = monitor
 
 INCLUDE_DIR = ../include
 

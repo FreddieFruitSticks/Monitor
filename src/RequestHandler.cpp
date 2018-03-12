@@ -1,4 +1,5 @@
 #include "RequestHandler.h"
+#include "pistache/http_header.h"
 #include <json.hpp>
 #include <iostream>
 #include <fstream>
@@ -10,6 +11,14 @@ void RequestHandler::onRequest(const Http::Request& request, Http::ResponseWrite
 
 	if (request.resource() == "/ping"){
 		if(request.method() == Http::Method::Get){
+			auto header = request.headers().tryGet<Pistache::Http::Header::ContentType>();
+			// std::cout <<  << std::endl;
+			if (header)
+  				std::cout<<"header exist" << std::endl;
+			// auto rawValue = Pistache::Http::Header::header_cast<const Pistache::Http::Header::ContentType>(request.headers().tryGet("Content-Type"));
+			// if(*header == "application/json"){
+				// std::cout << *header << std::endl;
+			// }
 			response.send(Http::Code::Ok, "Pong");
 			return;
 		}
