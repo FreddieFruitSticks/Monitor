@@ -39,4 +39,4 @@ In /etc/nginx/sites-available/monitor we have:
 	  }
 	}
 	
-and in sites-enabled we create a symlink: ln -s /etc/nginx/sites-available/monitor monitor
+and in sites-enabled we create a symlink: ln -s /etc/nginx/sites-available/monitor monitor. Restart nginx; sudo service nginx restart
