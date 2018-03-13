@@ -29,6 +29,7 @@ The "monitor" script in the root dir is not the C++ executable application - thi
 
 Nginx is set up to proxy any port 80 calls on to port 8080 which is what the app listens on:
 In /etc/nginx/sites-available/monitor we have:
+
 	server { # simple reverse-proxy
 	  listen       80;
 	  server_name  ec2-52-207-234-165.compute-1.amazonaws.com;
@@ -37,4 +38,5 @@ In /etc/nginx/sites-available/monitor we have:
 		proxy_pass      http://127.0.0.1:8080;
 	  }
 	}
+	
 and in sites-enabled we create a symlink: ln -s /etc/nginx/sites-available/monitor monitor
