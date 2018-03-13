@@ -18,12 +18,9 @@ fi
 #                    override the defaults in /lib/init/init-d-script.
 ### END INIT INFO
 
-# Author: Foo Bar <foobar@baz.org>
-#
-# Please remove the "Author" lines above and replace them
-# with your own name if you copy and modify this script.
+# Author: Freddie O'Donnell
 
-DESC="Description of the service"
+DESC="Long running service for Monitor"
 DAEMON=/usr/local/bin/monitor
 
 case "$1" in 
