@@ -10,6 +10,7 @@ API: \ping
 
 # Devops scripts
 The "monitor" script in the root dir is not the C++ executable application - this sits in src folder. To set up the app executable as a linux long-running service you have to do the following:
+
 1) ssh in to the EC2 box: sh -i <path>/<to>/<pem> ubuntu@ec2-52-207-234-165.compute-1.amazonaws.com. The <path>/<to>/<pem> is the relative path to the pem file which is not saved to the repo. 
 	If you don't have it, it's probably because you shouldn't.
 	
