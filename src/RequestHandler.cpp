@@ -11,30 +11,26 @@ void RequestHandler::onRequest(const Http::Request& request, Http::ResponseWrite
 
 	if (request.resource() == "/ping"){
 		if(request.method() == Http::Method::Get){
-			auto header = request.headers().tryGet<Pistache::Http::Header::ContentType>();
-			// std::cout <<  << std::endl;
-			if (header)
-  				std::cout<<"header exist" << std::endl;
-			// auto rawValue = Pistache::Http::Header::header_cast<const Pistache::Http::Header::ContentType>(request.headers().tryGet("Content-Type"));
-			// if(*header == "application/json"){
-				// std::cout << *header << std::endl;
-			// }
+			// auto header = request.headers().tryGet<Pistache::Http::Header::ContentType>();
 			response.send(Http::Code::Ok, "Pong");
-			return;
 		}
 	}
 	if(request.resource() == "/add"){
 		if(request.method() == Http::Method::Post){
-			std::ofstream deviceLogFile;
-			deviceLogFile.open("device_log_file", std::ios::app);
-
 			// nlohmann::json body = nlohmann::json::parse("{ \"happy\": true, \"pi\": 3.141 }");
-			// std::cout << body["happy"]<< std::endl;
 
-			deviceLogFile << request.body() << std::endl;
-			deviceLogFile.close();
+			if(request.body().size() > 150){
+				std::ofstream deviceLogFile;			
+				deviceLogFile.open("device_log_file", std::ios::app);
+				deviceLogFile << request.body() << std::endl;
+				deviceLogFile.close();
 
-			response.send(Http::Code::Ok, request.body(), MIME(Text, Plain));
+				response.send(Http::Code::Ok, "");
+			}else{
+				response.send(Http::Code::Internal_Server_Error, "");	
+			}
+		}else{
+			response.send(Http::Code::Internal_Server_Error, "");
 		}
 	}
 	if(request.resource() == "/read"){
