@@ -19,7 +19,7 @@ void RequestHandler::onRequest(const Http::Request& request, Http::ResponseWrite
 		if(request.method() == Http::Method::Post){
 			// nlohmann::json body = nlohmann::json::parse("{ \"happy\": true, \"pi\": 3.141 }");
 
-			if(request.body().size() > 150){
+			if(request.body().size() > 50){
 				std::ofstream deviceLogFile;			
 				deviceLogFile.open("device_log_file", std::ios::app);
 				deviceLogFile << request.body() << std::endl;
