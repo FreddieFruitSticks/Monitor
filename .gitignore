@@ -1,3 +1,4 @@
 src/objects/*
 device_log_file
 monitor
+/.vscode

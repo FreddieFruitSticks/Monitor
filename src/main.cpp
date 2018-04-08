@@ -14,7 +14,7 @@ int main(){
     signal(SIGILL, signalHandler);
     signal(SIGKILL, signalHandler);
 
-    Pistache::Address addr(Pistache::Ipv4::any(), Pistache::Port(8080));
+    Pistache::Address addr(Pistache::Ipv4::any(), Pistache::Port(8081));
     auto opts = Pistache::Http::Endpoint::options()
     			.threads(1)
     			.flags(Pistache::Tcp::Options::ReuseAddr);

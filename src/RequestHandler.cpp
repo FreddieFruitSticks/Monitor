@@ -6,7 +6,17 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <regex>
 
+std::vector<std::string> delimiter(const std::string stringIn, char delim){
+	std::vector<std::string> tokens;
+	std::stringstream ss(stringIn);
+	std::string subString;
+	while(std::getline(ss, subString, delim)){
+		tokens.push_back(subString);
+	}
+	return tokens;
+}
 void RequestHandler::onRequest(const Http::Request& request, Http::ResponseWriter response){
 
 	if (request.resource() == "/ping"){
@@ -21,7 +31,7 @@ void RequestHandler::onRequest(const Http::Request& request, Http::ResponseWrite
 
 			if(request.body().size() > 50){
 				std::ofstream deviceLogFile;			
-				deviceLogFile.open("device_log_file", std::ios::app);
+				deviceLogFile.open("device_log_file");
 				deviceLogFile << request.body() << std::endl;
 				deviceLogFile.close();
 
@@ -33,13 +43,24 @@ void RequestHandler::onRequest(const Http::Request& request, Http::ResponseWrite
 			response.send(Http::Code::Internal_Server_Error, "");
 		}
 	}
-	if(request.resource() == "/read"){
+	if(std::regex_match(request.resource(), std::regex("/read/[1-9][0-9]*"))){
+		std::vector<std::string> tokens = delimiter(request.resource(), '/');
+		int numberOfLines =std::stoi(tokens.back());
+
 		if(request.method() == Http::Method::Get){
 			std::vector<std::string> data;
 			std::ifstream inDeviceLogs("device_log_file");
 			std::string singleLogEntry;
+			int lineNumber = 1;
 			while(std::getline(inDeviceLogs, singleLogEntry)){
-				data.push_back(singleLogEntry);
+				// std::vector<std::string>::iterator it = data.begin();
+  				// it = data.insert(it, singleLogEntry);
+				if (lineNumber <= numberOfLines){
+					data.push_back(singleLogEntry);
+					lineNumber++;
+				}else{
+					break;
+				}
 			}
 			std::string responseBody = RequestHandler::vectorToString(data);
 			response.send(Http::Code::Ok, responseBody);
