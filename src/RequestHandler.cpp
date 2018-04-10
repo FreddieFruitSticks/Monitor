@@ -26,8 +26,8 @@ std::vector<std::string> tail(FILE* in, int n){
     // chars) assuming that long long int takes 8 
     // bytes
     unsigned long long pos;
-	int SIZE = 100;
-    char str[2*SIZE];
+	int SIZE = 150;
+    char str[10*SIZE];
  
     // Go to End of file
     if (fseek(in, 0, SEEK_END)){
@@ -55,7 +55,7 @@ std::vector<std::string> tail(FILE* in, int n){
         }
  
         // print last n lines
-        printf("Printing last %d lines -\n", n);
+        // printf("Printing last %d lines -\n", n);
         while (fgets(str, sizeof(str), in)){
 			data.push_back(str);
 		}
