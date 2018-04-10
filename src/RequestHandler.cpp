@@ -17,6 +17,51 @@ std::vector<std::string> delimiter(const std::string stringIn, char delim){
 	}
 	return tokens;
 }
+
+std::vector<std::string> tail(FILE* in, int n){
+	std::vector<std::string> data;
+    int count = 0;  // To count '\n' characters
+ 
+    // unsigned long long pos (stores upto 2^64 – 1
+    // chars) assuming that long long int takes 8 
+    // bytes
+    unsigned long long pos;
+	int SIZE = 100;
+    char str[2*SIZE];
+ 
+    // Go to End of file
+    if (fseek(in, 0, SEEK_END)){
+        perror("fseek() failed");
+    }else{
+        // pos will contain no. of chars in
+        // input file.
+        pos = ftell(in);
+ 
+        // search for '\n' characters
+        while (pos){
+            // Move 'pos' away from end of file.
+            if (!fseek(in, --pos, SEEK_SET)){
+                if (fgetc(in) == '\n'){
+ 
+                    // stop reading when n newlines
+                    // is found
+                    if (count++ == n)
+                        break;
+				}
+            }
+            else{
+                perror("fseek() failed");
+			}
+        }
+ 
+        // print last n lines
+        printf("Printing last %d lines -\n", n);
+        while (fgets(str, sizeof(str), in)){
+			data.push_back(str);
+		}
+    }
+	return data;
+}
 void RequestHandler::onRequest(const Http::Request& request, Http::ResponseWriter response){
 
 	if (request.resource() == "/ping"){
@@ -31,7 +76,7 @@ void RequestHandler::onRequest(const Http::Request& request, Http::ResponseWrite
 
 			if(request.body().size() > 50){
 				std::ofstream deviceLogFile;			
-				deviceLogFile.open("device_log_file");
+				deviceLogFile.open("device_log_file", std::ios::app);
 				deviceLogFile << request.body() << std::endl;
 				deviceLogFile.close();
 
@@ -49,19 +94,22 @@ void RequestHandler::onRequest(const Http::Request& request, Http::ResponseWrite
 
 		if(request.method() == Http::Method::Get){
 			std::vector<std::string> data;
-			std::ifstream inDeviceLogs("device_log_file");
-			std::string singleLogEntry;
-			int lineNumber = 1;
-			while(std::getline(inDeviceLogs, singleLogEntry)){
-				// std::vector<std::string>::iterator it = data.begin();
-  				// it = data.insert(it, singleLogEntry);
-				if (lineNumber <= numberOfLines){
-					data.push_back(singleLogEntry);
-					lineNumber++;
-				}else{
-					break;
-				}
-			}
+			FILE* fp = fopen("device_log_file", "rt");
+			data = tail(fp, numberOfLines);
+			// std::ifstream inDeviceLogs("device_log_file");
+			// std::string singleLogEntry;
+			// int lineNumber = 1;
+			// while(std::getline(inDeviceLogs, singleLogEntry)){
+			// 	// std::vector<std::string>::iterator it = data.begin();
+  			// 	// it = data.insert(it, singleLogEntry);
+			// 	if (lineNumber <= numberOfLines){
+			// 		data.push_back(singleLogEntry);
+			// 		lineNumber++;
+			// 	}else{
+			// 		break;
+			// 	}
+			// }
+			fclose(fp);
 			std::string responseBody = RequestHandler::vectorToString(data);
 			response.send(Http::Code::Ok, responseBody);
 		}
