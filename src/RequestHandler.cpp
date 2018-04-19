@@ -56,8 +56,10 @@ std::vector<std::string> tail(FILE* in, int n){
  
         // print last n lines
         // printf("Printing last %d lines -\n", n);
+
         while (fgets(str, sizeof(str), in)){
-			data.push_back(str);
+			std::vector<std::string>::iterator it = data.begin();
+			data.insert(it, str);
 		}
     }
 	return data;
