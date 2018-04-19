@@ -14,6 +14,8 @@ The "monitor" script in the root dir is not the C++ executable application - thi
 1) ssh in to the EC2 box: sh -i <path>/<to>/<pem> ubuntu@ec2-52-207-234-165.compute-1.amazonaws.com. The <path>/<to>/<pem> is the relative path to the pem file which is not saved to the repo. 
 	If you don't have it, it's probably because you shouldn't.
 	
+1.1) Install Nginx
+	
 2) Upload the monitor service script from your local machine to EC2 home directory (/ubuntu/home) on the EC2 box (call this from your local machine);
 	scp -i <path>/<to>/<pem> <path>/<to>/<monitor_service_script> ubuntu@ec2-52-207-234-165.compute-1.amazonaws.com: (note the colon at the end)
 	
