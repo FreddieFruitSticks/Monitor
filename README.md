@@ -1,13 +1,3 @@
-# Monitor
-Public DNS as of this writing: http://ec2-52-207-234-165.compute-1.amazonaws.com
-
-API: \ping
-		Should return pong
-	 \read
-	 	Returns a list of the crap you want in JSON format.
-	 \add
-	 	Add your crap. Whatever you send me will all go on one line per request.
-
 # Devops scripts
 The "monitor" script in the root dir is not the C++ executable application - this sits in src folder. To set up the app executable as a linux long-running service you have to do the following:
 
